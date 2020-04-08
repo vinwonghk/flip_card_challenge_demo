@@ -84,8 +84,7 @@ class _GamePageState extends State<GamePage> {
                         flex: 4,
                         child: gameBoard(),
                     ),
-                    Flexible(
-                        flex: 1,
+                    Expanded(
                         child: infoPanel(),
                     )
                 ],
@@ -96,8 +95,7 @@ class _GamePageState extends State<GamePage> {
                         flex: 4,
                         child: gameBoard(),
                     ),
-                    Flexible(
-                        flex: 1,
+                    Expanded(
                         child: infoPanel(),
                     )
                 ],
@@ -105,24 +103,6 @@ class _GamePageState extends State<GamePage> {
     }
 
     Widget gameBoard() {
-
-                    // if (gameOver) {
-                    //     showDialog(
-                    //         context: context,
-                    //         builder: (BuildContext dialogContext) {
-                    //             return AlertDialog(
-                    //                 title: Text('You won!'),
-                    //                 content: Text('Your time: ${StopWatchTimer.getDisplayTime(_stopWatchTimer.rawTime.value)}'),
-                    //                 actions: <Widget>[
-                    //                     FlatButton(
-                    //                         onPressed: () => Navigator.of(context).pushReplacement(WelcomePage.route()),
-                    //                         child: Text('Retry', style: TextStyle(fontSize: 18)),
-                    //                     )
-                    //                 ],
-                    //             );
-                    //         }
-                    //     );
-                    // }
         return Stack(
             children: <Widget>[
                 Align(
@@ -186,18 +166,17 @@ class _GamePageState extends State<GamePage> {
     }
 
     Widget infoPanel() {
-        return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+        return ListView(
+            
             children: <Widget>[
-                StreamBuilder<int>(
-                    stream: _stopWatchTimer.rawTime,
-                    initialData: _stopWatchTimer.rawTime.value,
-                    builder: (BuildContext context, AsyncSnapshot<int> snap) {
-                        final int value = snap.data;
-                        final String displayTime = StopWatchTimer.getDisplayTime(value);
-                        return Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: Text(
+                Center(
+                    child: StreamBuilder<int>(
+                        stream: _stopWatchTimer.rawTime,
+                        initialData: _stopWatchTimer.rawTime.value,
+                        builder: (BuildContext context, AsyncSnapshot<int> snap) {
+                            final int value = snap.data;
+                            final String displayTime = StopWatchTimer.getDisplayTime(value);
+                            return Text(
                                 displayTime,
                                 style: TextStyle(
                                     fontSize: 40,
@@ -206,14 +185,17 @@ class _GamePageState extends State<GamePage> {
                                     color: Colors.black,
                                     decoration: TextDecoration.none
                                 ),
-                            )
-                        );
-                    },
+                            );
+                        },
+                    ),
                 ),
+                
                 if (gameOver)
-                    RaisedButton(
-                        onPressed: () => Navigator.of(context).pushReplacement(GamePage.route()),
-                        child: Text('Retry', style: TextStyle(fontSize: 18)),
+                    Center(
+                        child: RaisedButton(
+                            onPressed: () => Navigator.of(context).pushReplacement(GamePage.route()),
+                            child: Text('Retry', style: TextStyle(fontSize: 18)),
+                        )
                     )
             ],
         );
