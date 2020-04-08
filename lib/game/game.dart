@@ -1,9 +1,11 @@
 
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flip_card_challenge_demo/model/card.dart';
 import 'package:flip_card_challenge_demo/route/route.dart';
 import 'package:flip_card/flip_card.dart';
+import 'package:flip_card_challenge_demo/welcome.dart';
 import 'package:flutter/material.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 
@@ -52,12 +54,17 @@ class _GamePageState extends State<GamePage> {
 
     bool gameOver = false;
 
+    String documentId;
+
+    TextEditingController _textEditingController;
+
     final StopWatchTimer _stopWatchTimer = StopWatchTimer();
     
     @override
     void initState() {
         super.initState();
         // shuffle the cards
+        _textEditingController = TextEditingController();
         cardList = shuffle(cardList);
         cardKeyList = List.generate(widget.cardsNumber, (index) => GlobalKey<FlipCardState>());
     }
@@ -143,7 +150,7 @@ class _GamePageState extends State<GamePage> {
                                             });
                                         }
                                     },
-                                    onFlipDone: (bool result) {
+                                    onFlipDone: (bool result) async {
                                         if (cardKeyList[card.cardNumber - 1].currentState.isFront) {
                                             setState(() {
                                                 cardList.remove(card);
@@ -153,6 +160,10 @@ class _GamePageState extends State<GamePage> {
                                             setState(() {
                                                 _stopWatchTimer.onExecute.add(StopWatchExecute.stop);
                                                 gameOver = true;
+                                            });
+                                            final String temp = await uploadRecord(_stopWatchTimer.rawTime.value);
+                                            setState(() {
+                                                documentId = temp;
                                             });
                                         }
                                     },
@@ -167,50 +178,70 @@ class _GamePageState extends State<GamePage> {
 
     Widget infoPanel() {
         return ListView(
-            
             children: <Widget>[
-                Center(
-                    child: StreamBuilder<int>(
-                        stream: _stopWatchTimer.rawTime,
-                        initialData: _stopWatchTimer.rawTime.value,
-                        builder: (BuildContext context, AsyncSnapshot<int> snap) {
-                            final int value = snap.data;
-                            final String displayTime = StopWatchTimer.getDisplayTime(value);
-                            return Text(
-                                displayTime,
-                                style: TextStyle(
-                                    fontSize: 40,
-                                    fontFamily: 'Helvetica',
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                    decoration: TextDecoration.none
-                                ),
-                            );
-                        },
-                    ),
+                StreamBuilder<int>(
+                    stream: _stopWatchTimer.rawTime,
+                    initialData: _stopWatchTimer.rawTime.value,
+                    builder: (BuildContext context, AsyncSnapshot<int> snap) {
+                        final int value = snap.data;
+                        final String displayTime = StopWatchTimer.getDisplayTime(value);
+                        return Text(
+                            displayTime,
+                            style: TextStyle(
+                                fontSize: 40,
+                                fontFamily: 'Helvetica',
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                                decoration: TextDecoration.none
+                            ),
+                        );
+                    },
                 ),
-                
                 if (gameOver)
-                    Center(
-                        child: RaisedButton(
-                            onPressed: () => Navigator.of(context).pushReplacement(GamePage.route()),
-                            child: Text('Retry', style: TextStyle(fontSize: 18)),
-                        )
-                    )
+                    Column(
+                        children: <Widget>[
+                            TextField(
+                                controller: _textEditingController,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    labelText: 'Type your Name',
+                                ),
+                            ),
+                            RaisedButton(
+                                onPressed: () async {
+                                    await updateName(documentId, _textEditingController.text);
+                                    Navigator.of(context).pushReplacement(WelcomePage.route());
+                                },
+                                child: Text('Submit', style: TextStyle(fontSize: 18)),
+                            ),
+                        ],
+                    ),
+                if (gameOver)
+                    RaisedButton(
+                        onPressed: () => Navigator.of(context).pushReplacement(GamePage.route()),
+                        child: Text('Retry', style: TextStyle(fontSize: 18)),
+                    ),
+                if (gameOver)
+                    RaisedButton(
+                        onPressed: () => Navigator.of(context).pushReplacement(WelcomePage.route()),
+                        child: Text('Back to Home', style: TextStyle(fontSize: 18)),
+                    ),
             ],
         );
     }
 
     @override
     Widget build(BuildContext context) {
-        return LayoutBuilder(
-            builder: (BuildContext context, BoxConstraints constraints) {
-                return Stack(
-                    children: <Widget>[
-                        gameEngine(context),
-                    ],
-                );
-            },
+        return Scaffold(
+            body: LayoutBuilder(
+                builder: (BuildContext context, BoxConstraints constraints) {
+                    return Stack(
+                        children: <Widget>[
+                            gameEngine(context),
+                        ],
+                    );
+                },
+            )
         );
     }
 
@@ -229,5 +260,20 @@ class _GamePageState extends State<GamePage> {
         }
 
         return items;
+    }
+
+    Future<String> uploadRecord(int completeTime) async {
+        final DocumentReference doc = await Firestore.instance.collection('scores').add({
+            'name': 'Unnamed Hero',
+            'completeTime': completeTime,
+            'dateCreated': FieldValue.serverTimestamp()
+        });
+        return doc.documentID;
+    }
+
+    Future<void> updateName(String documentId, String name) {
+        Firestore.instance.collection('scores').document(documentId).updateData({
+            'name': name,
+        });
     }
 }
