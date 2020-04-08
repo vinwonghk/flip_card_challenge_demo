@@ -28,6 +28,24 @@
       });
     }
   </script>
+  <script src="https://www.gstatic.com/firebasejs/7.13.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.13.2/firebase-firestore.js"></script>
+  <script>
+    // TODO: Replace the following with your app's Firebase project configuration.
+    // See: https://support.google.com/firebase/answer/7015592
+    var firebaseConfig = {
+      apiKey: "AIzaSyDekKvQ2MH_YyjWP1sxn_SapeEK12Z9iZk",
+      authDomain: "flip-card-challenge-demo.firebaseapp.com",
+      databaseURL: "https://flip-card-challenge-demo.firebaseio.com",
+      projectId: "flip-card-challenge-demo",
+      storageBucket: "flip-card-challenge-demo.appspot.com",
+      messagingSenderId: "398251851286",
+      appId: "1:398251851286:web:4c6254d07073368b9e7f37"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+  </script>
+  <!-- END OF FIREBASE INIT CODE -->
   <script src="main.dart.js" type="application/javascript"></script>
 </body>
 </html>

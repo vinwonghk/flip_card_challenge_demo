@@ -1,14 +1,14 @@
 'use strict';
 const CACHE_NAME = 'flutter-app-cache';
 const RESOURCES = {
-  "index.html": "edc28e394049e1adbb804a6fb96034a6",
-"/": "edc28e394049e1adbb804a6fb96034a6",
-"main.dart.js": "cf65c72aeb06337cf10d7159f50c9caa",
+  "index.html": "6e36d6fa9ffdc019db196c5a4cc8bc5d",
+"/": "6e36d6fa9ffdc019db196c5a4cc8bc5d",
+"main.dart.js": "0d65547519525b3a7cf8e478f99e17f9",
 "favicon.png": "5dcef449791fa27946b3d35ad8803796",
 "icons/Icon-192.png": "ac9a721a12bbc803b44f645561ecb1e1",
 "icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
 "manifest.json": "1ff7c5ef6f12eb9d2087f3597d924edb",
-"assets/LICENSE": "88f7b1984d167a3c106050242402df02",
+"assets/LICENSE": "63a98704ef7b92d6ea5c18e1d74ec6df",
 "assets/AssetManifest.json": "2efbb41d7877d10aac9d091f58ccd7b9",
 "assets/welcome-page-question-mark-card.png": "ffa728152fb81bd1e7db17554b6eb46c",
 "assets/FontManifest.json": "01700ba55b08a6141f33e168c4a6c22f",
