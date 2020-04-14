@@ -1,4 +1,5 @@
 import 'package:flip_card_challenge_demo/game/game.dart';
+import 'package:flip_card_challenge_demo/test.dart';
 import 'package:flutter/material.dart';
 import 'package:flip_card_challenge_demo/welcome.dart';
 
@@ -15,6 +16,7 @@ class CardMatchingApp extends StatelessWidget {
             switch(settings.name) {
                 case "/": return WelcomePage.route();
                 case "/game": return GamePage.route();
+                case "/test": return TestPage.route();
                 default: return WelcomePage.route();
             }
             },

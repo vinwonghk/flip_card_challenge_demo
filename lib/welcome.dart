@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flip_card_challenge_demo/game/game.dart';
 import 'package:flip_card_challenge_demo/model/score_record.dart';
+import 'package:flip_card_challenge_demo/test.dart';
 import 'package:flutter/material.dart';
 import 'package:flip_card_challenge_demo/route/route.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
@@ -114,6 +115,15 @@ class _WelcomePageState extends State<WelcomePage> {
                                             },
                                             child: Text(
                                                 'Start!',
+                                                style: TextStyle(fontSize: 20),
+                                            )
+                                        ),
+                                        RaisedButton(
+                                            onPressed: () {
+                                                Navigator.of(context).pushReplacement(TestPage.route());
+                                            },
+                                            child: Text(
+                                                'TEST TEST',
                                                 style: TextStyle(fontSize: 20),
                                             )
                                         ),
